@@ -1,0 +1,102 @@
+<template>
+  <div class="sanInput">
+    <div class="mask" s-if="{{disabled}}"></div>    
+    <div 
+    class="inputWrap" 
+    s-ref="inputWrap"
+    style="{{error ? 'border:1px solid red;' : 'border: 1px solid #ccc;'}}">
+      <span s-if="inputing" class="inputing">正在输入</span>
+      <input 
+       disabled="{{readOlny}}"
+       type="text"
+       on-input="inputHandle($event)"
+       on-focus="focusHandle($event)"
+       on-blur="blurHandle($event)"
+       placeholder="{{placeholder}}" 
+       value="{= value =}"/>
+    </div>
+    <span s-if="error" class="errorWords">{{notion}}</span>    
+  </div>
+</template>
+
+<script>
+export default {
+  inntData () {
+    return {
+      placeholder: '',
+      inputing: false
+    }  
+  },
+  computed: {
+  },
+  inited () {
+  },
+  inputHandle () {
+    this.fire('input', this.data.get('val'))
+  },
+  focusHandle (event) {
+    this.fire('focus')
+    this.data.set('inputing', true)
+    if (!this.data.get('error')) {
+      event.target.parentNode.style.border = '1px solid black'          
+    } 
+  },
+  blurHandle (event) {
+    this.fire('blur')
+    this.data.set('inputing', false)
+    if (!this.data.get('error')) {
+      event.target.parentNode.style.border = '1px solid #ccc'          
+    }   
+  }
+}
+</script>
+
+<style scoped>
+.sanInput {
+    width: fit-content;
+    display: flex;
+    align-items: center;
+    margin: 20px;
+    position: relative;    
+}
+
+.inputWrap {
+    padding: 4px 8px;
+}
+
+.mask {
+    background-color: rgba(249, 249, 249, 0.6);
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    right: 0;
+}
+
+.mask:hover {
+    cursor: not-allowed;
+}
+
+.inputWrap:hover {
+    border: 1px solid black;
+}
+
+.sanInput input {
+    width: 150px;
+    height: 19px;
+    font-size: 12px;
+    line-height: 20px;
+    border: none;
+    outline: none;
+}
+
+.inputing {
+    font-size: 12px;
+}
+
+.errorWords {
+    margin-left: 10px;
+    font-size: 13px;
+    color: red;
+}
+</style>
